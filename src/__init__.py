@@ -1,2 +1,0 @@
-#This is a special Python file that tells Python "this folder is a Python package — you can import code from it."
-#Without this file, Python cannot find your code when you do from src.rag.retriever import something.
