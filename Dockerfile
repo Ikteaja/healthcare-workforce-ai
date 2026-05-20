@@ -30,7 +30,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Step 5 — Copy all source code into the container
 COPY src/ ./src/
-COPY conftest.py .
 
 # Step 6 — Copy env example as default config
 # Real .env is mounted at runtime via docker-compose
