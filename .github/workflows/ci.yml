@@ -48,7 +48,7 @@ jobs:
       # flake8 checks for common Python mistakes and bad formatting
       # Example: line too long, unused imports, wrong spacing
       - name: Lint with flake8
-        run: flake8 src/ --max-line-length=120 --ignore=E501,W503
+        run: flake8 src/
 
       # Step 5 — Check code formatting with black
       # black checks that your code is formatted consistently
