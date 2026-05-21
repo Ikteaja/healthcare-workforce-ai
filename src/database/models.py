@@ -14,12 +14,12 @@
 # =============================================================
 
 from sqlalchemy import (
-    Column,       # defines a column in a table
-    Integer,      # number column type
-    String,       # text column type
-    Date,         # date column type (2026-05-20)
-    Time,         # time column type (07:00)
-    ForeignKey    # links one table to another
+    Column,  # defines a column in a table
+    Integer,  # number column type
+    String,  # text column type
+    Date,  # date column type (2026-05-20)
+    Time,  # time column type (07:00)
+    ForeignKey,  # links one table to another
 )
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -37,6 +37,7 @@ Base = declarative_base()
 # Example row:
 # id=1, name="Sarah Johnson", role="Nurse", department="ICU"
 # =============================================================
+
 
 class Staff(Base):
 
@@ -87,6 +88,7 @@ class Staff(Base):
 # start=07:00, end=15:00, ward="Ward A", type="morning"
 # =============================================================
 
+
 class Shift(Base):
 
     __tablename__ = "shifts"
@@ -134,6 +136,7 @@ class Shift(Base):
 # id=1, department="ICU", week_start=2026-05-18,
 # min_staff_required=5
 # =============================================================
+
 
 class Schedule(Base):
 
