@@ -30,9 +30,9 @@ import os
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath("."))
 
-from src.ingestion.loader import load_documents
-from src.ingestion.chunker import split_documents
-from src.ingestion.embedder import embed_and_store
+from src.ingestion.loader import load_documents  # noqa: E402
+from src.ingestion.chunker import split_documents  # noqa: E402
+from src.ingestion.embedder import embed_and_store  # noqa: E402
 
 
 def run_ingestion():

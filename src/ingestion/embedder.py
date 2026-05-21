@@ -119,7 +119,7 @@ def embed_and_store(chunks: list) -> None:
             print(f"  Failed on chunk {i}: {e}")
             error_count += 1
 
-    print(f"\nEmbedding complete:")
+    print("\nEmbedding complete:")
     print(f"  Saved:  {success_count} chunks")
     print(f"  Failed: {error_count} chunks")
     print(f"  Location: {chroma_path}")
