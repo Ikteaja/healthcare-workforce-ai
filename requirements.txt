@@ -70,3 +70,7 @@ flake8==7.1.1
 
 # httpx — needed by FastAPI TestClient for API testing
 httpx==0.27.0
+# API
+fastapi==0.115.0
+uvicorn==0.30.0
+python-multipart==0.0.12

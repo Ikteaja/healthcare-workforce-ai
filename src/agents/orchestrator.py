@@ -17,7 +17,6 @@
 # CALLS:     policy_tool, schedule_tool, compliance_tool
 # USES:      LangChain ReAct agent + Ollama LLM
 # =============================================================
-
 import os
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
@@ -28,13 +27,11 @@ from src.agents.tools.compliance_tool import compliance_tool
 from dotenv import load_dotenv
 
 load_dotenv()
-
 # The LLM that drives the agent decisions
 llm = OllamaLLM(
     model=os.getenv("OLLAMA_MODEL", "llama3.2"),
     base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
 )
-
 # All tools the agent can use
 tools = [policy_tool, schedule_tool, compliance_tool]
 
@@ -70,14 +67,12 @@ Begin!
 Question: {input}
 Thought:{agent_scratchpad}"""
 )
-
 # Create the ReAct agent
 agent = create_react_agent(
     llm=llm,
     tools=tools,
     prompt=AGENT_PROMPT,
 )
-
 # AgentExecutor runs the agent loop
 # max_iterations prevents infinite loops
 # handle_parsing_errors prevents crashes on bad LLM output
@@ -94,22 +89,17 @@ def run_agent(question: str) -> str:
     """
     Runs the agent with the given question.
     Returns the final answer as a string.
-
     Args:
         question: the user question string
-
     Returns:
         answer string from the agent
     """
-
     try:
         result = executor.invoke({"input": question})
         return result.get("output", "No answer generated.")
-
     except Exception as e:
         # Fallback to direct RAG if agent fails
         print(f"Agent error: {e}")
         print("Falling back to direct RAG...")
         from src.rag.chain import answer_question
-
         return answer_question(question)

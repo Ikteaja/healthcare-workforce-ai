@@ -122,7 +122,7 @@ def retrieve_chunks(query: str, n_results: int = 4) -> list:
     # ── Step 7: Print what was found ─────────────────────────
     # This helps you see which documents the AI is reading
     # Similarity: 100% = identical, 0% = completely different
-    print(f"\nFound {len(chunks)} relevant chunks for your question:")
+    print(f"Found {len(chunks)} relevant chunks:")
     for i, (chunk, meta, dist) in enumerate(zip(chunks, metadatas, distances)):
         source = meta.get("source", "unknown")
         page = meta.get("page", "?")
