@@ -24,6 +24,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator  # ← add
 from src.api.routes import router
 
 # Create the FastAPI application
@@ -61,6 +62,10 @@ app.add_middleware(
 # All endpoints (/health, /chat, /ingest) become active here
 app.include_router(router)
 
+# ── Phase 12: Expose /metrics for Prometheus ─────────────
+# Prometheus scrapes this endpoint every 15 seconds
+# Automatically tracks: request count, duration, errors
+Instrumentator().instrument(app).expose(app)  # ← add
 
 # =============================================================
 # ROOT ROUTE
@@ -80,4 +85,5 @@ def root():
         "message": "Healthcare Workforce AI is running",
         "docs": "http://localhost:8000/docs",
         "health": "http://localhost:8000/health",
+        "metrics": "http://localhost:8000/metrics",
     }

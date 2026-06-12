@@ -1,0 +1,65 @@
+# =============================================================
+# docker-compose.yml
+# =============================================================
+# Runs the full monitoring stack.
+# Phase 12: Prometheus + Grafana + Loki
+#
+# HOW TO RUN:
+#   docker compose up -d
+#
+# SERVICES:
+#   prometheus → http://localhost:9090 (collects metrics)
+#   grafana    → http://localhost:3000 (dashboards)
+#   loki       → http://localhost:3100 (collects logs)
+# =============================================================
+
+version: "3.9"
+
+services:
+
+  # ── Prometheus ─────────────────────────────────────────────
+  # Scrapes /metrics from FastAPI every 15 seconds.
+  # Stores time-series data locally.
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    restart: unless-stopped
+
+  # ── Grafana ────────────────────────────────────────────────
+  # Reads from Prometheus and Loki.
+  # Shows charts and dashboards.
+  # Default login: admin / admin
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+      - loki
+    restart: unless-stopped
+
+  # ── Loki ───────────────────────────────────────────────────
+  # Collects log messages from FastAPI.
+  # Stores logs locally.
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+
+volumes:
+  grafana_data:

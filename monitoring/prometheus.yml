@@ -1,0 +1,21 @@
+# =============================================================
+# monitoring/prometheus.yml
+# =============================================================
+# Tells Prometheus what to scrape and how often.
+# job_name: your FastAPI app
+# targets: where FastAPI /metrics lives
+# scrape_interval: how often to collect metrics
+# =============================================================
+
+global:
+  scrape_interval: 15s       # collect metrics every 15 seconds
+  evaluation_interval: 15s   # evaluate alert rules every 15s
+
+scrape_configs:
+
+  # ── Scrape FastAPI /metrics ─────────────────────────────
+  - job_name: "healthcare-workforce-ai"
+    static_configs:
+      # host.docker.internal = your laptop from inside Docker
+      - targets: ["host.docker.internal:8000"]
+    metrics_path: "/metrics"

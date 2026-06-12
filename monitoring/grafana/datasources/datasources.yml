@@ -1,0 +1,23 @@
+# =============================================================
+# monitoring/grafana/datasources/datasources.yml
+# =============================================================
+# Tells Grafana where to find Prometheus and Loki.
+# Auto-configured on startup — no manual setup needed.
+# =============================================================
+
+apiVersion: 1
+
+datasources:
+
+  # ── Prometheus ─────────────────────────────────────────
+  - name: Prometheus
+    type: prometheus
+    url: http://prometheus:9090
+    isDefault: true
+    access: proxy
+
+  # ── Loki ───────────────────────────────────────────────
+  - name: Loki
+    type: loki
+    url: http://loki:3100
+    access: proxy
