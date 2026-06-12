@@ -1,0 +1,76 @@
+# =============================================================
+# requirements.txt — All Python libraries for this project
+# =============================================================
+# Install all at once with: pip install -r requirements.txt
+# =============================================================
+
+
+# --- AI / RAG Core -------------------------------------------
+# LangChain — connects LLM, tools, agents, and prompts together
+langchain==0.3.0
+
+# LangChain community tools — document loaders, vector stores
+langchain-community==0.3.0
+
+# LangChain Ollama — connects LangChain to local Ollama models
+langchain-ollama==0.2.0
+
+# ChromaDB — local vector database for storing document chunks
+chromadb==0.4.24
+
+
+# --- API -----------------------------------------------------
+# FastAPI — builds the REST API backend
+fastapi==0.115.0
+
+# Uvicorn — runs the FastAPI server
+uvicorn==0.30.0
+
+
+# --- Frontend ------------------------------------------------
+# Streamlit — builds the chat UI
+streamlit==1.39.0
+
+
+# --- Document Loading ----------------------------------------
+# pypdf — reads PDF files
+pypdf==4.3.0
+
+# python-docx — reads Word (.docx) files
+python-docx==1.1.0
+
+
+# --- Database ------------------------------------------------
+# SQLAlchemy — connects to and manages SQLite database
+sqlalchemy==2.0.36
+
+
+# --- Configuration -------------------------------------------
+# Pydantic — validates data shapes (used by FastAPI)
+pydantic==2.9.0
+
+# python-dotenv — reads .env file into os.getenv()
+python-dotenv==1.0.1
+
+
+# --- Experiment Tracking -------------------------------------
+# MLflow — tracks every AI query, response time, model version
+mlflow==2.17.0
+
+
+# --- Testing & Code Quality ----------------------------------
+# pytest — runs all test files automatically
+pytest==8.3.0
+
+# black — checks code formatting is consistent
+black==24.10.0
+
+# flake8 — checks code for common mistakes and style issues
+flake8==7.1.1
+
+# httpx — needed by FastAPI TestClient for API testing
+httpx==0.27.0
+# API
+fastapi==0.115.0
+uvicorn==0.30.0
+python-multipart==0.0.12
