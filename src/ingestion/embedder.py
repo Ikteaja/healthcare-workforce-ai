@@ -26,8 +26,17 @@
 # THIS FILE NEVER CHANGES when you switch data source.
 # =============================================================
 
+import sys
+from unittest.mock import MagicMock
+
+# Patch onnxruntime before ChromaDB loads
+sys.modules["onnxruntime"] = MagicMock()
+sys.modules["onnxruntime.capi"] = MagicMock()
+sys.modules["onnxruntime.capi._pybind_state"] = MagicMock()
+
 import os
 import chromadb
+from chromadb.config import Settings
 from langchain_ollama import OllamaEmbeddings
 from dotenv import load_dotenv
 
@@ -53,13 +62,15 @@ def embed_and_store(chunks: list) -> None:
     # PersistentClient saves data to disk at CHROMA_PATH
     # If the folder does not exist, ChromaDB creates it
     chroma_path = os.getenv("CHROMA_PATH", "./data/chroma_db")
-    client = chromadb.PersistentClient(path=chroma_path)
-
+    client = chromadb.PersistentClient(
+        path=chroma_path, settings=Settings(anonymized_telemetry=False)
+    )
     # Get or create the collection
     # A collection is like a table in a normal database
     # All healthcare document chunks go into one collection
     collection = client.get_or_create_collection(
         name="healthcare_docs",
+        embedding_function=None,
         metadata={"description": "Healthcare workforce documents"},
     )
 

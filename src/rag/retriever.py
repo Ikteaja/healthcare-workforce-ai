@@ -35,8 +35,18 @@
 #   - prompt.py receives the returned chunks
 # =============================================================
 
+import sys
+from unittest.mock import MagicMock
+
+# Patch onnxruntime before ChromaDB loads
+sys.modules["onnxruntime"] = MagicMock()
+sys.modules["onnxruntime.capi"] = MagicMock()
+sys.modules["onnxruntime.capi._pybind_state"] = MagicMock()
+
 import os
+from xmlrpc import client
 import chromadb
+from chromadb.config import Settings
 from langchain_ollama import OllamaEmbeddings
 from dotenv import load_dotenv
 
@@ -67,14 +77,20 @@ def retrieve_chunks(query: str, n_results: int = 4) -> list:
     # PersistentClient reads from the folder on disk
     # This is the same folder embedder.py wrote to
     chroma_path = os.getenv("CHROMA_PATH", "./data/chroma_db")
-    client = chromadb.PersistentClient(path=chroma_path)
+    client = chromadb.PersistentClient(
+        path=chroma_path, settings=Settings(anonymized_telemetry=False)
+    )
 
     # ── Step 2: Get the collection ───────────────────────────
     # Collection = a named group of vectors (like a table)
     # "healthcare_docs" was the name used in embedder.py
     # If it does not exist, ingestion has not been run yet
     try:
-        collection = client.get_collection("healthcare_docs")
+        # embedding_function=None tells ChromaDB we provide
+        # our own embeddings — do NOT load onnxruntime default
+        collection = client.get_collection(
+            name="healthcare_docs", embedding_function=None
+        )
     except Exception:
         print("ChromaDB collection not found.")
         print("Run ingestion first:")

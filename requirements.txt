@@ -16,7 +16,7 @@ langchain-community==0.3.0
 langchain-ollama==0.2.0
 
 # ChromaDB — local vector database for storing document chunks
-chromadb==0.5.0
+chromadb==0.4.24
 
 
 # --- API -----------------------------------------------------
