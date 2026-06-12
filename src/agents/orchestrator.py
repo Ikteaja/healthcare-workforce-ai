@@ -102,4 +102,5 @@ def run_agent(question: str) -> str:
         print(f"Agent error: {e}")
         print("Falling back to direct RAG...")
         from src.rag.chain import answer_question
+
         return answer_question(question)
