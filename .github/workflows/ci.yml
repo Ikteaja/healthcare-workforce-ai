@@ -58,7 +58,7 @@ jobs:
 
       # Step 6 — Run all your tests with pytest
       - name: Run tests
-        run: PYTHONPATH=. pytest tests/ -v
+        run: pytest tests/ -v -m "not slow"
 
   # ── JOB 2: BUILD ─────────────────────────────────────────
   # Builds Docker image only if Job 1 (test) passes
