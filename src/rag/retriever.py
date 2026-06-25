@@ -1,4 +1,5 @@
 # =============================================================
+# Note:Not used. using hybrid_retriever.py instead of this file
 # src/rag/retriever.py
 # =============================================================
 #

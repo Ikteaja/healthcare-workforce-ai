@@ -36,6 +36,9 @@ from dotenv import load_dotenv  # ← Phase 9: reads .env
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from langchain_ollama import OllamaLLM  # ← Phase 9: direct LLM call
 from pydantic import BaseModel
+#have to import check_and_guard from hallucination_guard.py to use it in the /chat route
+from src.rag.hallucination_guard import(check_and_guard, FALLBACK_MESSAGE )
+
 
 load_dotenv()
 
@@ -200,6 +203,12 @@ async def chat(request: ChatRequest):
             )
             answer = llm.invoke(prompt)
             llm_time = round(time.time() - llm_start, 2)
+            answer = check_and_guard(answer, chunks)
+            # Log whether answer was grounded or fallback used
+            # grounded = True  → answer came from documents
+            # grounded = False → fallback message returned
+            is_grounded = answer != FALLBACK_MESSAGE
+            mlflow.set_tag("grounded", str(is_grounded))
 
             # ── Phase 9: log LLM timing ───────────────────
             mlflow.log_metric("llm_time_seconds", llm_time)
