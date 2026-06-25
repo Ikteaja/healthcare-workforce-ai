@@ -131,42 +131,68 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     # Imports moved here — only load when /chat is called
-    from src.rag.retriever import retrieve_chunks
+    # replace retriever.py with hybrid_retriever.py
+    # from src.rag.retriever import retrieve_chunks
+    # hybrid_retrieve() uses BM25 + embedding search for better results
+    from src.rag.hybrid_retriever import hybrid_retrieve
     from src.rag.prompt import build_prompt
 
     start_time = time.time()
 
     # ── Phase 9: open MLflow run — everything inside recorded
     # with block automatically closes and saves run at the end
+    # ── Phase 9: open MLflow run ──────────────────────────
+    # with block = everything inside is recorded as one run
+    # automatically closes and saves when block ends
     with mlflow.start_run():
 
-        # ── Phase 9: log what was asked and which model ──────
-        # log_param = fixed values that describe this request
+        # ── Phase 9: log fixed parameters ────────────────
+        # log_param = values that describe this request
+        # these do not change during the run
         mlflow.log_param("question", request.question[:250])
         mlflow.log_param("model", os.getenv("OLLAMA_MODEL", "llama3.2"))
         mlflow.log_param("embed_model", os.getenv("EMBED_MODEL", "nomic-embed-text"))
-        # Tags are labels — help filter runs in dashboard
+        # Tags = labels for filtering runs in dashboard
         mlflow.set_tag("environment", "development")
         mlflow.set_tag("route", "/chat")
+        mlflow.set_tag("retrieval_type", "hybrid_bm25_embedding")
 
         try:
-            # ── Phase 9: time retrieval step separately ──────
-            # This tells you: how long did ChromaDB search take?
+            # ── Phase 14: hybrid retrieval (timed) ───────
+            # Returns list of dicts with text + BM25 + embed scores
+            # Replaces old retrieve_chunks() from Phase 9
             retrieval_start = time.time()
-            chunks = retrieve_chunks(request.question)
+            chunks_with_meta = hybrid_retrieve(request.question)
             retrieval_time = round(time.time() - retrieval_start, 2)
 
-            # log_metric = numbers you measured during the run
+            # ── Extract plain text from hybrid results ────
+            # hybrid_retrieve() returns dicts — we need
+            # just the text strings for the prompt
+            chunks = [c["text"] for c in chunks_with_meta]
+
+            # ── Phase 9: log retrieval metrics ───────────
+            # How long did ChromaDB + BM25 search take?
             mlflow.log_metric("retrieval_time_seconds", retrieval_time)
             mlflow.log_metric("chunks_retrieved", len(chunks))
 
-            # ── Phase 9: build prompt ─────────────────────────
-            # Same prompt.py from Phase 5 — no change
+            # ── Phase 14: log hybrid scores per chunk ─────
+            # These show BM25 vs embedding contribution
+            # Visible in MLflow dashboard under Metrics
+            for i, c in enumerate(chunks_with_meta):
+                mlflow.log_metric(f"chunk_{i+1}_bm25", c["bm25_score"])
+                mlflow.log_metric(f"chunk_{i+1}_embed", c["embed_score"])
+                mlflow.log_metric(f"chunk_{i+1}_final", c["final_score"])
+                mlflow.log_param(f"chunk_{i+1}_source", c["source"])
+
+            # ── Phase 9: build prompt ─────────────────────
+            # Combines retrieved chunks + question into
+            # one prompt string for the LLM
+            # prompt.py is unchanged from Phase 5
             prompt = build_prompt(chunks, request.question)
 
-            # ── Phase 9: time LLM step separately ────────────
-            # This tells you: how long did the LLM take?
-            # Usually 80-95% of total time on laptop CPU
+            # ── Phase 9: LLM call (timed separately) ─────
+            # This is the slow step — 80-95% of total time
+            # Measured separately so you can see the split
             llm_start = time.time()
             llm = OllamaLLM(
                 model=os.getenv("OLLAMA_MODEL", "llama3.2"),
@@ -175,23 +201,25 @@ async def chat(request: ChatRequest):
             answer = llm.invoke(prompt)
             llm_time = round(time.time() - llm_start, 2)
 
+            # ── Phase 9: log LLM timing ───────────────────
             mlflow.log_metric("llm_time_seconds", llm_time)
 
-            # ── Phase 9: log total time ───────────────────────
+            # ── Phase 9: log total end-to-end time ────────
+            # This is what the user experiences
             total_time = round(time.time() - start_time, 2)
             mlflow.log_metric("total_response_time_seconds", total_time)
 
-            # ── Phase 9: save artifacts ───────────────────────
-            # Artifacts = files saved alongside the run
-            # Open any run in dashboard and download these files
+            # ── Phase 9: save artifacts ───────────────────
+            # Files saved alongside the run in mlruns/
+            # Open any run in MLflow UI → Artifacts tab
             mlflow.log_text(answer, "answer.txt")
             mlflow.log_text("\n\n---\n\n".join(chunks), "retrieved_chunks.txt")
             mlflow.log_text(prompt, "prompt.txt")
 
-            # ── Phase 9: mark this run as successful ──────────
+            # ── Phase 9: mark run successful ──────────────
             mlflow.set_tag("status", "success")
 
-            # Print timing summary to FastAPI terminal
+            # Print summary to FastAPI terminal for debugging
             print(
                 f"MLflow logged | "
                 f"retrieval={retrieval_time}s | "
@@ -202,9 +230,9 @@ async def chat(request: ChatRequest):
             return ChatResponse(answer=answer)
 
         except Exception as e:
-            # ── Phase 9: log errors to MLflow too ────────────
-            # Failed runs appear in dashboard with status=error
-            # Click the failed run to see error_message param
+            # ── Phase 9: log errors to MLflow ────────────
+            # Failed runs show status=error in dashboard
+            # Click the failed run → see error_message param
             mlflow.set_tag("status", "error")
             mlflow.log_param("error_message", str(e)[:250])
             total_time = round(time.time() - start_time, 2)

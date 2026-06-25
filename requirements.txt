@@ -17,8 +17,8 @@ langchain-ollama==0.2.0
 
 # ChromaDB — local vector database for storing document chunks
 chromadb==0.4.24
-
-
+# BM25 — ranking algorithm for information retrieval.Searches keywords
+rank-bm25==0.2.2
 # --- API -----------------------------------------------------
 # FastAPI — builds the REST API backend
 fastapi==0.115.0
