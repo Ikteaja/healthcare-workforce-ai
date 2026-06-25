@@ -30,8 +30,8 @@ import streamlit as st
 # =============================================================
 # Must be the very first Streamlit command
 st.set_page_config(
-    page_title="Healthcare Workforce AI",
-    page_icon="🏥",
+    page_title="WorkforceIQ",
+    page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -106,9 +106,8 @@ def upload_document(file) -> str:
 # =============================================================
 
 with st.sidebar:
-    st.title("🏥 Healthcare AI")
-    st.caption("Workforce Management Assistant")
-
+    st.title("🤖 WorkforceIQ")
+    st.caption("Agentic RAG Platform for Workforce Intelligence")
     # ── System Status ──────────────────────────────────────
     st.divider()
     st.subheader("System Status")
@@ -164,7 +163,7 @@ with st.sidebar:
     st.divider()
     st.caption("Powered by LangChain + ChromaDB + Ollama")
     st.caption("German labour law compliant")
-    st.caption("St. Marienkrankenhaus GmbH")
+    st.caption("Helix Workforce Solutions GmbH")
 
 
 # =============================================================
@@ -172,10 +171,10 @@ with st.sidebar:
 # =============================================================
 
 # Title and description
-st.title("🏥 Healthcare Workforce AI Assistant")
+st.title("🤖 WorkforceIQ")
 st.caption(
-    "Ask questions about HR policies, staff schedules, "
-    "German labour law, and compliance rules."
+    "Agentic RAG Platform for Workforce Intelligence — "
+    "HR policies, schedules, labour law and compliance."
 )
 
 # ── Initialise chat history ────────────────────────────────
@@ -190,8 +189,8 @@ if len(st.session_state.messages) == 0:
         {
             "role": "assistant",
             "content": (
-                "Hello! I am your Healthcare Workforce AI Assistant. "
-                "I can help you with:\n\n"
+                "Hello! I am WorkforceIQ — your Agentic AI Assistant. "
+                "I can help you with workforce intelligence:\n\n"
                 "- **HR policies** — leave, sick pay, working hours\n"
                 "- **Staff schedules** — who works when and where\n"
                 "- **German labour law** — AZG, TVöD-K, DSGVO\n"

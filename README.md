@@ -1,4 +1,4 @@
-# 🏥 Healthcare Workforce AI Assistant
+# 🤖  WorkforceIQ — Agentic RAG Platform for Workforce Intelligence
 
 > *"A nurse walks up to the HR desk and asks: What is my annual leave entitlement?"*
 > *The HR officer searches through 200 pages of German labour law documents.*
@@ -11,7 +11,7 @@
 
 ## The Problem This Solves
 
-St. Marienkrankenhaus GmbH — a German hospital — employs hundreds of nurses,
+Helix Workforce Solutions GmbH — a German hospital — employs hundreds of nurses,
 doctors, and administrative staff. Every day, HR staff answer the same questions
 repeatedly:
 
@@ -75,7 +75,7 @@ HR staff types a question
 **The answer returned:**
 > *"According to SECTION 1: ANNUAL LEAVE (JAHRESURLAUB), section 1.2 —
 > Nurses (Pflegepersonal) are entitled to 30 days per year.
-> Source: HEALTHCARE WORKFORCE HR POLICY, St. Marienkrankenhaus GmbH,
+> Source: HEALTHCARE WORKFORCE HR POLICY, Helix Workforce Solutions GmbH,
 > Version 1.0, May 2026."*
 
 Cited. Grounded. Verified against the actual document.
@@ -420,6 +420,6 @@ healthcare-workforce-ai/
 ---
 
 *Built by Ikteaja Hasan*
-*German healthcare scenario — St. Marienkrankenhaus GmbH*
+*German healthcare scenario — Helix Workforce Solutions GmbH*
 *Stack: Python · LangChain · ChromaDB · Ollama · FastAPI · Streamlit*
 *MLOps: MLflow · Prometheus · Grafana · Docker · GitHub Actions*

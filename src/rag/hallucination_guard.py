@@ -28,6 +28,7 @@ HALLUCINATION_THRESHOLD = 0.30
 # "the", "is", "a" etc add noise — we only check real words
 MIN_WORD_LENGTH = 4
 
+
 def is_grounded(answer: str, chunks: list[str]) -> bool:
     """
     Returns True if answer appears grounded in chunks.
@@ -62,27 +63,24 @@ def is_grounded(answer: str, chunks: list[str]) -> bool:
         w for w in answer_words
         if w not in common_skip_words
     ]
-
     # If no content words remain — cannot verify — assume grounded
     if not content_words:
         return True
-
     # Count matches
     matched = sum(
         1 for word in content_words
         if word in all_chunk_text
     )
-
     overlap = matched / len(content_words)
-
     print(
         f"Hallucination check: "
         f"{matched}/{len(content_words)} content words matched "
         f"({overlap:.0%}) — "
         f"{'GROUNDED' if overlap >= HALLUCINATION_THRESHOLD else 'FALLBACK'}"
     )
-
     return overlap >= HALLUCINATION_THRESHOLD
+
+
 def check_and_guard(answer: str, chunks: list[str]) -> str:
     """
     Returns the original answer if grounded,

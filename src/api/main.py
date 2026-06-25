@@ -30,11 +30,11 @@ from src.api.routes import router
 # Create the FastAPI application
 # title and description appear on the /docs page
 app = FastAPI(
-    title="Healthcare Workforce AI",
+    title="WorkforceIQ",
     description=(
-        "RAG Agentic AI for Healthcare Workforce Management. "
-        "German labour law compliant. "
-        "Powered by LangChain + ChromaDB + Ollama."
+        "Agentic RAG Platform for Workforce Intelligence. "
+        "HR policies, compliance and scheduling powered by "
+        "LangChain + ChromaDB + Ollama."
     ),
     version="1.0.0",
 )
@@ -82,7 +82,7 @@ def root():
     Shows welcome message and links to documentation.
     """
     return {
-        "message": "Healthcare Workforce AI is running",
+        "message": "WorkforceIQ — Agentic RAG Platform is running",
         "docs": "http://localhost:8000/docs",
         "health": "http://localhost:8000/health",
         "metrics": "http://localhost:8000/metrics",

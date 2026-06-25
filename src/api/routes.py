@@ -36,8 +36,8 @@ from dotenv import load_dotenv  # ← Phase 9: reads .env
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from langchain_ollama import OllamaLLM  # ← Phase 9: direct LLM call
 from pydantic import BaseModel
-#have to import check_and_guard from hallucination_guard.py to use it in the /chat route
-from src.rag.hallucination_guard import(check_and_guard, FALLBACK_MESSAGE )
+# Import hallucination guard to check answers are grounded in source chunks
+from src.rag.hallucination_guard import (check_and_guard, FALLBACK_MESSAGE)
 
 
 load_dotenv()
@@ -94,7 +94,9 @@ class IngestResponse(BaseModel):
 # SOURCE:      Docker, GitHub Actions, or your browser
 # SENDS:       nothing
 # RETURNS:     {"status": "ok"}
-# PURPOSE:     confirms FastAPI is running correctly
+# PURPOSE:
+#   WorkforceIQ — Agentic RAG Platform for Workforce Intelligence
+#   Defines the three API endpoints.
 # TEST IT:     open browser → http://localhost:8000/health
 # NO CHANGE — MLflow not needed for health checks
 # =============================================================
