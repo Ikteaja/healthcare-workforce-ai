@@ -29,7 +29,13 @@ citing the exact source document and section — running entirely on-premise
 to comply with German data protection law (DSGVO).
 
 ---
+## System Architecture
 
+![WorkforceIQ — Complete System Architecture](docs/images/workforceiq_architecture.png)
+
+> Full stack: User → Streamlit → FastAPI → Hybrid RAG Pipeline →
+> Ollama LLM → Hallucination Guard → MLflow + Prometheus + Grafana + Loki
+---
 ## What Was Built
 
 A **complete, production-grade RAG Agentic AI system** built from scratch —
